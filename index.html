@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>幼儿园优秀教师工作台</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#f2f6fa;
+    --card:#ffffff;
+    --primary:#3aa98f;
+    --primary-d:#2e8c76;
+    --primary-l:#e8f6f2;
+    --accent:#f5a623;
+    --pink:#ee7aa0;
+    --blue:#5b9cf6;
+    --text:#1f2d3d;
+    --sub:#7b8794;
+    --line:#e6eef6;
+    --shadow:0 4px 18px rgba(31,45,61,.07);
+    --radius:14px;
+  }
+  html,body{height:100%}
+  body{
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,sans-serif;
+    background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .app{display:flex;min-height:100vh}
+
+  /* ---------- 侧边栏 ---------- */
+  .sidebar{
+    width:224px;flex-shrink:0;background:#fff;border-right:1px solid var(--line);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;
+  }
+  .brand{padding:22px 20px 18px;display:flex;align-items:center;gap:10px}
+  .brand-logo{
+    width:38px;height:38px;border-radius:11px;flex-shrink:0;
+    background:linear-gradient(135deg,#3aa98f,#5b9cf6);
+    display:flex;align-items:center;justify-content:center;font-size:20px;
+    box-shadow:0 4px 10px rgba(58,169,143,.3);
+  }
+  .brand-txt strong{display:block;font-size:15px;letter-spacing:.5px}
+  .brand-txt span{font-size:11px;color:var(--sub);letter-spacing:1px}
+  .nav{padding:6px 12px;flex:1;overflow-y:auto}
+  .nav-item{
+    display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;
+    cursor:pointer;color:#4b5b6b;font-size:14px;margin-bottom:2px;
+    transition:.18s;user-select:none;border:none;background:none;width:100%;text-align:left;
+    font-family:inherit;
+  }
+  .nav-item:hover{background:#f5f8fb;color:var(--text)}
+  .nav-item.active{background:var(--primary-l);color:var(--primary-d);font-weight:600}
+  .nav-item .ico{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+  .nav-item .cnt{
+    margin-left:auto;font-size:11px;background:#eef3f8;color:var(--sub);
+    padding:1px 7px;border-radius:9px;font-weight:600;
+  }
+  .nav-item.active .cnt{background:#fff;color:var(--primary-d)}
+  .side-foot{padding:12px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap}
+  .mini-btn{
+    flex:1;min-width:70px;padding:7px 6px;font-size:12px;border-radius:8px;cursor:pointer;
+    border:1px solid var(--line);background:#fff;color:#5a6b7c;font-family:inherit;transition:.18s;
+  }
+  .mini-btn:hover{border-color:var(--primary);color:var(--primary-d);background:var(--primary-l)}
+
+  /* ---------- 主区 ---------- */
+  .main{flex:1;min-width:0;display:flex;flex-direction:column}
+  .topbar{
+    padding:20px 30px 16px;display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;
+  }
+  .topbar h1{font-size:21px;font-weight:700;letter-spacing:.3px}
+  .topbar .sub{font-size:13px;color:var(--sub);margin-top:2px}
+  .topbar-right{margin-left:auto;display:flex;gap:10px;align-items:center}
+  .search{
+    display:flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);
+    border-radius:10px;padding:8px 12px;box-shadow:var(--shadow);min-width:200px;
+  }
+  .search input{border:none;outline:none;font-size:13px;width:140px;font-family:inherit;background:transparent;color:var(--text)}
+  .content{padding:0 30px 40px;flex:1}
+
+  /* ---------- 卡片 ---------- */
+  .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid rgba(230,238,246,.8)}
+  .card-h{padding:16px 20px 12px;display:flex;align-items:center;gap:10px}
+  .card-h h3{font-size:15px;font-weight:600}
+  .card-h .more{margin-left:auto;font-size:12px;color:var(--primary-d);cursor:pointer}
+  .card-b{padding:0 20px 18px}
+
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:16px}
+  .stat{
+    background:#fff;border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);
+    border:1px solid rgba(230,238,246,.8);position:relative;overflow:hidden;
+  }
+  .stat::after{content:"";position:absolute;right:-16px;top:-16px;width:70px;height:70px;border-radius:50%;opacity:.10}
+  .stat.c1::after{background:var(--primary)}
+  .stat.c2::after{background:var(--accent)}
+  .stat.c3::after{background:var(--blue)}
+  .stat.c4::after{background:var(--pink)}
+  .stat .lbl{font-size:12.5px;color:var(--sub);margin-bottom:6px}
+  .stat .num{font-size:27px;font-weight:700;letter-spacing:.5px;line-height:1.1}
+  .stat.c1 .num{color:var(--primary-d)}
+  .stat.c2 .num{color:#d98b08}
+  .stat.c3 .num{color:#3b7fe0}
+  .stat.c4 .num{color:#d95b86}
+  .stat .foot{font-size:11.5px;color:var(--sub);margin-top:6px}
+
+  .grid2{display:grid;grid-template-columns:1.35fr 1fr;gap:14px;align-items:start}
+  @media(max-width:1000px){.grid2{grid-template-columns:1fr}}
+
+  /* ---------- 工具条 ---------- */
+  .toolbar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+  .chip{
+    padding:6px 13px;border-radius:20px;font-size:13px;cursor:pointer;border:1px solid var(--line);
+    background:#fff;color:#5a6b7c;font-family:inherit;transition:.18s;
+  }
+  .chip:hover{border-color:var(--primary)}
+  .chip.on{background:var(--primary);border-color:var(--primary);color:#fff;font-weight:600}
+  .btn{
+    padding:8px 16px;border-radius:9px;font-size:13px;cursor:pointer;font-family:inherit;
+    border:1px solid var(--line);background:#fff;color:#4b5b6b;transition:.18s;
+  }
+  .btn:hover{border-color:var(--primary);color:var(--primary-d)}
+  .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff;font-weight:600}
+  .btn.primary:hover{background:var(--primary-d)}
+  .btn.ghost{background:transparent}
+  .spacer{flex:1}
+
+  /* ---------- 表格 ---------- */
+  .tablewrap{overflow-x:auto;border-radius:var(--radius)}
+  table{width:100%;border-collapse:collapse;font-size:13px;background:#fff}
+  th{
+    text-align:left;padding:11px 14px;color:var(--sub);font-weight:600;font-size:12.5px;
+    background:#f8fbfd;border-bottom:1px solid var(--line);white-space:nowrap;
+  }
+  td{padding:12px 14px;border-bottom:1px solid #f1f6fa;vertical-align:middle}
+  tbody tr:hover{background:#fafcfe}
+  tbody tr:last-child td{border-bottom:none}
+  .cell-main{font-weight:600;color:var(--text)}
+  .cell-sub{font-size:11.5px;color:var(--sub);margin-top:2px}
+  .mono{font-family:ui-monospace,Consolas,"Courier New",monospace;font-size:12px;color:#5a6b7c}
+  .badge{
+    display:inline-block;padding:2px 10px;border-radius:20px;font-size:12px;font-weight:600;white-space:nowrap;
+  }
+  .b-green{background:#e5f6f0;color:#22866e}
+  .b-amber{background:#fdf3e0;color:#b4790a}
+  .b-blue{background:#e9f1fe;color:#3874d6}
+  .b-pink{background:#fdeaf1;color:#c74c7c}
+  .b-gray{background:#eef2f6;color:#77838f}
+  .rowact{white-space:nowrap;text-align:right}
+  .ico-btn{
+    border:none;background:none;cursor:pointer;font-size:13px;padding:4px 6px;border-radius:6px;
+    color:var(--sub);transition:.15s;
+  }
+  .ico-btn:hover{background:#f0f5f9;color:var(--primary-d)}
+  .ico-btn.del:hover{background:#fdecec;color:#d9534f}
+
+  /* ---------- 空状态 ---------- */
+  .empty{padding:50px 20px;text-align:center;color:var(--sub)}
+  .empty .big{font-size:38px;margin-bottom:10px;opacity:.55}
+
+  /* ---------- 待办 ---------- */
+  .todo{padding:6px 20px 14px}
+  .todo-item{
+    display:flex;align-items:flex-start;gap:11px;padding:11px 12px;border-radius:10px;
+    transition:.15s;border-bottom:1px solid #f4f8fb;
+  }
+  .todo-item:hover{background:#fafcfe}
+  .todo-item:last-child{border-bottom:none}
+  .cb{
+    width:19px;height:19px;border-radius:6px;border:1.8px solid #cdd9e3;flex-shrink:0;margin-top:2px;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;
+    transition:.15s;background:#fff;
+  }
+  .cb:hover{border-color:var(--primary)}
+  .cb.on{background:var(--primary);border-color:var(--primary)}
+  .todo-txt{flex:1;min-width:0}
+  .todo-txt .t{font-size:13.5px}
+  .todo-txt .d{font-size:11.5px;color:var(--sub);margin-top:3px}
+  .todo-item.done .todo-txt .t{text-decoration:line-through;color:#a8b3bd}
+  .pri{font-size:11px;padding:1px 8px;border-radius:20px;flex-shrink:0;font-weight:600}
+  .p-高{background:#fdecec;color:#d9534f}
+  .p-中{background:#fdf3e0;color:#b4790a}
+  .p-低{background:#eef2f6;color:#77838f}
+  .overdue{color:#d9534f !important;font-weight:600}
+
+  .timeline{padding:4px 20px 18px}
+  .tl-item{display:flex;gap:12px;padding:9px 0;position:relative}
+  .tl-item:not(:last-child)::before{
+    content:"";position:absolute;left:5px;top:24px;bottom:-4px;width:1px;background:var(--line);
+  }
+  .tl-dot{width:11px;height:11px;border-radius:50%;background:var(--primary-l);border:2.5px solid var(--primary);flex-shrink:0;margin-top:6px}
+  .tl-body{flex:1;min-width:0}
+  .tl-body .t{font-size:13.5px}
+  .tl-body .d{font-size:11.5px;color:var(--sub);margin-top:2px}
+
+  .quick{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;padding:4px 20px 18px}
+  .quick-item{
+    padding:14px 12px;border-radius:11px;border:1px solid var(--line);cursor:pointer;text-align:center;
+    transition:.18s;background:#fff;
+  }
+  .quick-item:hover{border-color:var(--primary);background:var(--primary-l);transform:translateY(-2px)}
+  .quick-item .e{font-size:22px;display:block;margin-bottom:5px}
+  .quick-item .n{font-size:12.5px;color:#4b5b6b;font-weight:500}
+
+  /* ---------- 弹窗 ---------- */
+  .mask{
+    position:fixed;inset:0;background:rgba(31,45,61,.42);display:none;align-items:center;justify-content:center;
+    z-index:100;padding:20px;backdrop-filter:blur(2px);
+  }
+  .mask.show{display:flex}
+  .dialog{
+    background:#fff;border-radius:16px;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;
+    box-shadow:0 20px 60px rgba(31,45,61,.25);animation:pop .2s ease;
+  }
+  @keyframes pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+  .dlg-h{padding:20px 24px 6px;display:flex;align-items:center}
+  .dlg-h h3{font-size:16px}
+  .dlg-h .x{margin-left:auto;cursor:pointer;color:var(--sub);font-size:19px;line-height:1;background:none;border:none;padding:4px}
+  .dlg-h .x:hover{color:var(--text)}
+  .dlg-b{padding:14px 24px 4px;display:grid;gap:13px}
+  .field label{display:block;font-size:12.5px;color:#5a6b7c;margin-bottom:5px;font-weight:600}
+  .field label .req{color:#d9534f}
+  .field input,.field select,.field textarea{
+    width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:9px;font-size:13.5px;
+    font-family:inherit;outline:none;transition:.15s;background:#fbfdfe;color:var(--text);
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{
+    border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(58,169,143,.11)
+  }
+  .field textarea{resize:vertical;min-height:72px}
+  .dlg-f{padding:18px 24px 22px;display:flex;gap:10px;justify-content:flex-end}
+
+  /* ---------- 响应式 ---------- */
+  @media(max-width:820px){
+    .app{flex-direction:column}
+    .sidebar{width:100%;height:auto;position:relative;flex-direction:row;align-items:center;
+      border-right:none;border-bottom:1px solid var(--line);overflow-x:auto}
+    .brand{padding:12px 14px}
+    .brand-txt{display:none}
+    .nav{display:flex;gap:4px;padding:8px;overflow-x:auto;flex:1}
+    .nav-item{white-space:nowrap;margin-bottom:0;padding:8px 12px}
+    .nav-item .cnt{display:none}
+    .side-foot{display:none}
+    .topbar{padding:16px}
+    .content{padding:0 16px 30px}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-logo">🌱</div>
+      <div class="brand-txt">
+        <strong>教师工作台</strong>
+        <span>KINDERGARTEN</span>
+      </div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-foot">
+      <button class="mini-btn" id="btnExport">备份数据</button>
+      <button class="mini-btn" id="btnImport">恢复备份</button>
+      <input type="file" id="fileInput" accept=".json" style="display:none">
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h1 id="pageTitle">工作台</h1>
+        <div class="sub" id="pageSub"></div>
+      </div>
+      <div class="topbar-right">
+        <div class="search" id="searchBox" style="display:none">
+          <span>🔍</span>
+          <input type="text" id="searchInput" placeholder="搜索当前列表…">
+        </div>
+      </div>
+    </div>
+    <div class="content" id="view"></div>
+  </main>
+</div>
+
+<div class="mask" id="mask">
+  <div class="dialog">
+    <div class="dlg-h">
+      <h3 id="dlgTitle">新增</h3>
+      <button class="x" id="dlgClose">✕</button>
+    </div>
+    <div class="dlg-b" id="dlgBody"></div>
+    <div class="dlg-f">
+      <button class="btn" id="dlgCancel">取消</button>
+      <button class="btn primary" id="dlgSave">保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   幼儿园优秀教师 · 个人工作台
+   数据保存在浏览器本地（localStorage），可导出备份。
+   ============================================================ */
+
+const STORE_KEY = 'kg_teacher_workbench_v1';
+const todayStr = () => new Date().toISOString().slice(0, 10);
+
+/* ---------- 板块配置 ---------- */
+const CATS = ['园务管理','教育教学','卫生保健','安全防护','幼儿档案','教师档案','上级文件','财务后勤'];
+
+const SECTIONS = {
+  dash: {
+    label:'工作台', icon:'🏠', title:'我的工作台',
+    sub:'今日概览 · 待办提醒 · 快捷入口', fields:[]
+  },
+  archives: {
+    label:'档案资料', icon:'📁', title:'档案资料管理', sub:'按分类归档、登记与借阅跟踪',
+    fields:[
+      {key:'code',   label:'档案编号', ph:'如 YW-2026-001', w:130, mono:true},
+      {key:'name',   label:'档案名称', required:true, main:true},
+      {key:'cat',    label:'分类', type:'select', options:CATS, w:110},
+      {key:'year',   label:'年度', type:'select', options:['2024','2025','2026','2027'], w:80},
+      {key:'status', label:'状态', type:'select', options:['已归档','待归档','借出中'], badge:true, w:95},
+      {key:'place',  label:'存放位置', w:120},
+      {key:'note',   label:'备注', type:'textarea', hide:true},
+      {key:'updated',label:'更新时间', type:'date', w:110}
+    ]
+  },
+  lessons: {
+    label:'教学计划', icon:'📖', title:'教学计划', sub:'周计划、主题活动与教学目标',
+    fields:[
+      {key:'week',  label:'周次', ph:'如 第6周', w:90, main:true},
+      {key:'date',  label:'开始日期', type:'date', w:110},
+      {key:'theme', label:'主题', required:true},
+      {key:'area',  label:'领域', type:'select', options:['健康','语言','社会','科学','艺术'], w:90},
+      {key:'goal',  label:'教学目标', type:'textarea', hide:true},
+      {key:'status',label:'状态', type:'select', options:['未开始','进行中','已完成'], badge:true, w:95}
+    ]
+  },
+  children: {
+    label:'幼儿成长', icon:'🧸', title:'幼儿成长档案', sub:'观察记录、作品分析与个体发展',
+    fields:[
+      {key:'name',  label:'幼儿姓名', required:true, w:100, main:true},
+      {key:'cls',   label:'班级', type:'select', options:['小一班','小二班','中一班','中二班','大一班','大二班'], w:95},
+      {key:'month', label:'记录月份', ph:'如 9月', w:90},
+      {key:'type',  label:'记录类型', type:'select', options:['观察记录','作品分析','成长故事','发展评估'], badge:true, w:105},
+      {key:'content',label:'记录内容', type:'textarea', hide:true},
+      {key:'date',  label:'记录日期', type:'date', w:110}
+    ]
+  },
+  home: {
+    label:'家园共育', icon:'💬', title:'家园共育记录', sub:'家长沟通、家访与家长会留痕',
+    fields:[
+      {key:'date',  label:'日期', type:'date', w:110, main:true},
+      {key:'who',   label:'沟通对象', required:true, w:130},
+      {key:'way',   label:'沟通方式', type:'select', options:['微信','电话','家访','家长会','接送面谈'], badge:true, w:105},
+      {key:'content',label:'沟通内容', type:'textarea', hide:true},
+      {key:'follow',label:'跟进情况', type:'textarea', hide:true},
+      {key:'status',label:'状态', type:'select', options:['待跟进','已完成'], badge:true, w:95}
+    ]
+  },
+  growth: {
+    label:'专业成长', icon:'🏆', title:'专业成长记录', sub:'荣誉、公开课、培训与证书',
+    fields:[
+      {key:'date',  label:'取得日期', type:'date', w:110, main:true},
+      {key:'type',  label:'类型', type:'select', options:['荣誉','公开课','培训','论文','证书','比赛'], badge:true, w:95},
+      {key:'name',  label:'名称', required:true},
+      {key:'level', label:'级别', type:'select', options:['园级','区级','市级','省级','国家级'], w:90},
+      {key:'note',  label:'说明', type:'textarea', hide:true}
+    ]
+  },
+  todos: {
+    label:'待办事项', icon:'✅', title:'待办事项', sub:'工作提醒与进度跟踪',
+    type:'todo',
+    fields:[
+      {key:'text', label:'事项内容', required:true},
+      {key:'due',  label:'截止日期', type:'date'},
+      {key:'pri',  label:'优先级', type:'select', options:['高','中','低']},
+      {key:'done', label:'状态', type:'select', options:['未完成','已完成']}
+    ]
+  }
+};
+const ORDER = ['dash','archives','lessons','children','home','growth','todos'];
+
+/* ---------- 示例数据 ---------- */
+function seed(){
+  return {
+    archives:[
+      {id:id(),code:'YW-2026-001',name:'2026年度园务工作计划',cat:'园务管理',year:'2026',status:'已归档',place:'档案柜A-1',note:'',updated:'2026-03-05'},
+      {id:id(),code:'JX-2026-014',name:'中班春季学期教学计划',cat:'教育教学',year:'2026',status:'已归档',place:'档案柜B-2',note:'',updated:'2026-04-12'},
+      {id:id(),code:'WS-2026-007',name:'春季传染病防控记录',cat:'卫生保健',year:'2026',status:'待归档',place:'待整理箱',note:'需补充晨检表',updated:'2026-09-28'},
+      {id:id(),code:'AQ-2026-021',name:'消防演练方案及总结',cat:'安全防护',year:'2026',status:'借出中',place:'园长办公室',note:'借予李园长',updated:'2026-09-20'},
+      {id:id(),code:'YE-2026-035',name:'幼儿健康体检表（中一班）',cat:'幼儿档案',year:'2026',status:'已归档',place:'档案柜C-1',note:'',updated:'2026-06-18'},
+      {id:id(),code:'SJ-2026-003',name:'上级关于规范办园行为的通知',cat:'上级文件',year:'2026',status:'已归档',place:'档案柜A-3',note:'',updated:'2026-09-01'}
+    ],
+    lessons:[
+      {id:id(),week:'第5周',date:'2026-10-05',theme:'秋天的秘密',area:'科学',goal:'观察秋天树叶的变化，能说出2-3种树叶的特征',status:'进行中'},
+      {id:id(),week:'第6周',date:'2026-10-12',theme:'我和我的家',area:'社会',goal:'了解家庭成员，学习用语言表达对家人的爱',status:'未开始'}
+    ],
+    children:[
+      {id:id(),name:'乐乐',cls:'中一班',month:'9月',type:'观察记录',content:'能主动帮助同伴整理玩具，社会性发展良好',date:'2026-09-22'},
+      {id:id(),name:'豆豆',cls:'中一班',month:'9月',type:'作品分析',content:'绘画《我的家》色彩丰富，构图完整，能讲述画面内容',date:'2026-09-26'}
+    ],
+    home:[
+      {id:id(),date:'2026-09-28',who:'乐乐妈妈',way:'微信',content:'沟通孩子午睡情况，建议晚上早睡',follow:'已回复，家长配合调整作息',status:'已完成'},
+      {id:id(),date:'2026-09-25',who:'全班家长',way:'家长会',content:'召开新学期家长会，介绍本学期教学重点与安全要求',follow:'出勤率95%，反馈良好',status:'已完成'}
+    ],
+    growth:[
+      {id:id(),date:'2026-09-10',type:'荣誉',name:'区级优秀教师',level:'区级',note:'教师节表彰'},
+      {id:id(),date:'2026-08-20',type:'培训',name:'幼儿园档案规范化管理培训',level:'市级',note:'共16学时'},
+      {id:id(),date:'2026-06-15',type:'公开课',name:'中班科学《有趣的沉浮》',level:'园级',note:'获得听课老师好评'}
+    ],
+    todos:[
+      {id:id(),text:'整理9月卫生保健档案并归档',due:'2026-10-06',pri:'高',done:false},
+      {id:id(),text:'完成第6周教学计划',due:'2026-10-09',pri:'中',done:false},
+      {id:id(),text:'家长开放日准备工作',due:'2026-10-15',pri:'高',done:false},
+      {id:id(),text:'提交优秀教师申报材料',due:'2026-10-02',pri:'中',done:true}
+    ]
+  };
+}
+function id(){ return Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-4); }
+
+/* ---------- 状态 ---------- */
+let state = load();
+let cur = 'dash';
+let filter = {};
+let search = {};
+let editing = null;   // {section, id|null}
+
+function load(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(raw){
+      const d = JSON.parse(raw);
+      ORDER.forEach(k=>{ if(!Array.isArray(d[k])) d[k] = []; });
+      return d;
+    }
+  }catch(e){ console.warn('读取本地数据失败', e); }
+  return seed();
+}
+function save(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){ console.warn(e); } }
+
+/* ---------- 工具 ---------- */
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtDate = s => { if(!s) return '—'; const p = String(s).split('-'); return p.length===3 ? `${p[1]}/${p[2]}` : s; };
+
+const BADGE = {
+  '已归档':'b-green','待归档':'b-amber','借出中':'b-blue',
+  '未开始':'b-gray','进行中':'b-blue','已完成':'b-green',
+  '待跟进':'b-amber','未完成':'b-gray',
+  '荣誉':'b-pink','公开课':'b-blue','培训':'b-green','论文':'b-amber','证书':'b-blue','比赛':'b-pink',
+  '观察记录':'b-green','作品分析':'b-pink','成长故事':'b-blue','发展评估':'b-amber',
+  '微信':'b-green','电话':'b-blue','家访':'b-amber','家长会':'b-pink','接送面谈':'b-gray'
+};
+const badgeCls = v => BADGE[v] || 'b-gray';
+
+function greeting(){
+  const h = new Date().getHours();
+  if(h < 6) return '凌晨好';
+  if(h < 11) return '早上好';
+  if(h < 14) return '中午好';
+  if(h < 18) return '下午好';
+  return '晚上好';
+}
+function dateLine(){
+  const d = new Date();
+  const w = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'][d.getDay()];
+  return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日 ${w}`;
+}
+
+/* ---------- 导航 ---------- */
+function renderNav(){
+  const nav = document.getElementById('nav');
+  nav.innerHTML = ORDER.map(k=>{
+    const s = SECTIONS[k];
+    const n = (state[k]||[]).length;
+    return `<button class="nav-item ${k===cur?'active':''}" data-nav="${k}">
+      <span class="ico">${s.icon}</span><span>${s.label}</span>${n?`<span class="cnt">${n}</span>`:''}
+    </button>`;
+  }).join('');
+  nav.querySelectorAll('[data-nav]').forEach(b=>{
+    b.onclick = ()=>{ cur = b.dataset.nav; render(); };
+  });
+}
+
+/* ---------- 渲染入口 ---------- */
+function render(){
+  renderNav();
+  const s = SECTIONS[cur];
+  document.getElementById('pageTitle').textContent = s.title;
+  document.getElementById('pageSub').textContent = s.sub;
+  const box = document.getElementById('searchBox');
+  box.style.display = cur === 'dash' ? 'none' : 'flex';
+  const vi = document.getElementById('searchInput');
+  vi.value = search[cur] || '';
+  vi.oninput = ()=>{ search[cur] = vi.value; renderBody(); };
+  renderBody();
+}
+
+function renderBody(){
+  const view = document.getElementById('view');
+  if(cur === 'dash')  return renderDash(view);
+  if(cur === 'todos') return renderTodos(view);
+  renderTable(view, cur);
+}
+
+/* ---------- 首页总览 ---------- */
+function renderDash(view){
+  const arc  = state.archives || [];
+  const tds  = state.todos || [];
+  const pending = arc.filter(a=>a.status==='待归档').length;
+  const lent    = arc.filter(a=>a.status==='借出中').length;
+  const openTodo= tds.filter(t=>!t.done).length;
+  const overdue = tds.filter(t=>!t.done && t.due && t.due < todayStr()).length;
+
+  const nextTodos = tds.filter(t=>!t.done)
+    .sort((a,b)=>String(a.due||'9999').localeCompare(String(b.due||'9999'))).slice(0,5);
+
+  const recent = arc.slice()
+    .sort((a,b)=>String(b.updated||'').localeCompare(String(a.updated||''))).slice(0,5);
+
+  view.innerHTML = `
+  <div class="card" style="padding:22px 26px 20px;margin-bottom:16px;border:none;color:#fff;
+       background:linear-gradient(120deg,#3aa98f 0%,#4fb8a0 45%,#5b9cf6 100%);
+       box-shadow:0 8px 24px rgba(58,169,143,.28)">
+    <div style="font-size:20px;font-weight:700;letter-spacing:.5px">${greeting()}，老师 👋</div>
+    <div style="font-size:13px;opacity:.92;margin-top:5px">${dateLine()}</div>
+    <div style="margin-top:14px;font-size:13.5px;background:rgba(255,255,255,.18);
+         display:inline-block;padding:7px 15px;border-radius:20px">
+      ${overdue ? `⚠️ 有 <b>${overdue}</b> 项待办已逾期，建议优先处理` : '今天没有逾期事项，节奏很好 ✨'}
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat c1"><div class="lbl">档案总数</div><div class="num">${arc.length}</div>
+      <div class="foot">涵盖 ${Object.keys(arc.reduce((m,a)=>(m[a.cat]=1,m),{})).length} 个分类</div></div>
+    <div class="stat c2"><div class="lbl">待归档</div><div class="num">${pending}</div>
+      <div class="foot">${pending?'需要尽快整理入柜':'全部已归档 👍'}</div></div>
+    <div class="stat c3"><div class="lbl">借出中</div><div class="num">${lent}</div>
+      <div class="foot">${lent?'记得及时催还':'暂无外借'}</div></div>
+    <div class="stat c4"><div class="lbl">未完成待办</div><div class="num">${openTodo}</div>
+      <div class="foot">${overdue?`其中 ${overdue} 项已逾期`:'按计划推进中'}</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-h"><h3>📌 近期待办</h3>
+        <span class="more" data-go="todos">查看全部 →</span></div>
+      ${nextTodos.length ? `<div class="todo">${nextTodos.map(t=>{
+        const od = t.due && t.due < todayStr();
+        return `<div class="todo-item">
+          <div class="cb" data-toggle="${t.id}"></div>
+          <div class="todo-txt">
+            <div class="t">${esc(t.text)}</div>
+            <div class="d ${od?'overdue':''}">${t.due?`截止 ${esc(t.due)}${od?'（已逾期）':''}`:'未设截止日期'}</div>
+          </div>
+          <span class="pri p-${esc(t.pri||'低')}">${esc(t.pri||'低')}</span>
+        </div>`;}).join('')}</div>`
+      : `<div class="empty"><div class="big">🌿</div><div>暂无待办事项，轻松一下</div></div>`}
+    </div>
+
+    <div class="card">
+      <div class="card-h"><h3>🗂 最近归档</h3>
+        <span class="more" data-go="archives">查看全部 →</span></div>
+      ${recent.length ? `<div class="timeline">${recent.map(a=>`
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-body">
+            <div class="t">${esc(a.name)}</div>
+            <div class="d">${esc(a.cat||'未分类')} · ${esc(a.status||'')} · ${esc(a.updated||'')}</div>
+          </div>
+        </div>`).join('')}</div>`
+      : `<div class="empty"><div class="big">📁</div><div>还没有档案记录</div></div>`}
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="card-h"><h3>⚡ 快捷入口</h3></div>
+    <div class="quick">
+      <div class="quick-item" data-new="archives"><span class="e">📁</span><span class="n">登记新档案</span></div>
+      <div class="quick-item" data-new="lessons"><span class="e">📖</span><span class="n">写周计划</span></div>
+      <div class="quick-item" data-new="children"><span class="e">🧸</span><span class="n">记观察记录</span></div>
+      <div class="quick-item" data-new="home"><span class="e">💬</span><span class="n">家长沟通</span></div>
+      <div class="quick-item" data-new="growth"><span class="e">🏆</span><span class="n">录荣誉培训</span></div>
+      <div class="quick-item" data-new="todos"><span class="e">✅</span><span class="n">加待办</span></div>
+    </div>
+  </div>`;
+
+  view.querySelectorAll('[data-go]').forEach(el=> el.onclick = ()=>{ cur = el.dataset.go; render(); });
+  view.querySelectorAll('[data-new]').forEach(el=> el.onclick = ()=> openForm(el.dataset.new, null));
+  view.querySelectorAll('[data-toggle]').forEach(b=> b.onclick = ()=>{
+    const t = state.todos.find(x=>x.id===b.dataset.toggle);
+    if(t){ t.done = true; save(); renderBody(); }
+  });
+}
+
+/* ---------- 表格 ---------- */
+function renderTable(view, key){
+  const conf = SECTIONS[key];
+  const cols = conf.fields;
+  const all = state[key] || [];
+  const f = filter[key], q = (search[key]||'').trim().toLowerCase();
+
+  let rows = all.slice();
+  if(f && f.field){
+    rows = rows.filter(r => String(r[f.field]||'') === f.value);
+  }
+  if(q){
+    rows = rows.filter(r => cols.some(c => String(r[c.key]||'').toLowerCase().includes(q)));
+  }
+
+  // 筛选项
+  let toolbar = '';
+  const fc = cols.find(c=>c.type==='select' && c.badge);
+  if(fc){
+    toolbar = `<div class="toolbar">
+      <button class="chip ${!f?'on':''}" data-f="">全部</button>
+      ${fc.options.map(o=>`<button class="chip ${f&&f.value===o?'on':''}" data-f="${esc(o)}">${esc(o)}</button>`).join('')}
+      <div class="spacer"></div>
+      <button class="btn primary" data-add="1">＋ 新增${conf.label.slice(0,2)}</button>
+    </div>`;
+  }else{
+    toolbar = `<div class="toolbar"><div class="spacer"></div><button class="btn primary" data-add="1">＋ 新增</button></div>`;
+  }
+
+  const ths = cols.filter(c=>!c.hide).map(c=>`<th style="width:${c.w||'auto'}">${esc(c.label)}</th>`).join('');
+  let tbody;
+  if(!rows.length){
+    tbody = `<tr><td colspan="${cols.filter(c=>!c.hide).length+1}">
+      <div class="empty"><div class="big">${conf.icon}</div>
+      <div>${q||f?'没有匹配的记录，换个条件试试':'还没有记录，点右上角「新增」开始吧'}</div></div></td></tr>`;
+  }else{
+    tbody = rows.map(r=>{
+      const tds = cols.filter(c=>!c.hide).map(c=>{
+        const v = r[c.key];
+        if(c.badge) return `<td><span class="badge ${badgeCls(v)}">${esc(v||'—')}</span></td>`;
+        if(c.mono)  return `<td><span class="mono">${esc(v||'—')}</span></td>`;
+        if(c.main)  return `<td><div class="cell-main">${esc(v||'—')}</div></td>`;
+        if(c.type==='date') return `<td style="color:#7b8794">${esc(fmtDate(v))}</td>`;
+        return `<td>${esc(v||'—')}</td>`;
+      }).join('');
+      return `<tr>${tds}<td class="rowact">
+        <button class="ico-btn" data-edit="${r.id}" title="编辑">✎</button>
+        <button class="ico-btn del" data-del="${r.id}" title="删除">🗑</button>
+      </td></tr>`;
+    }).join('');
+  }
+
+  view.innerHTML = toolbar + `<div class="card tablewrap"><table>
+    <thead><tr>${ths}<th style="text-align:right;width:80px">操作</th></tr></thead>
+    <tbody>${tbody}</tbody></table></div>`;
+
+  view.querySelectorAll('[data-f]').forEach(b=>{
+    b.onclick = ()=>{
+      const v = b.dataset.f;
+      filter[key] = v ? {field:fc.key, value:v} : null;
+      renderBody();
+    };
+  });
+  view.querySelector('[data-add]').onclick = ()=> openForm(key, null);
+  view.querySelectorAll('[data-edit]').forEach(b=> b.onclick = ()=> openForm(key, b.dataset.edit));
+  view.querySelectorAll('[data-del]').forEach(b=> b.onclick = ()=>{
+    const r = state[key].find(x=>x.id===b.dataset.del);
+    if(confirm(`确定删除「${(r.name||r.text||r.who||r.week||'')}」吗？此操作不可恢复。`)){
+      state[key] = state[key].filter(x=>x.id!==b.dataset.del);
+      save(); render();
+    }
+  });
+}
+
+/* ---------- 待办 ---------- */
+function renderTodos(view){
+  const list = (state.todos||[]).slice().sort((a,b)=>{
+    if(a.done !== b.done) return a.done ? 1 : -1;
+    return String(a.due||'9999').localeCompare(String(b.due||'9999'));
+  });
+  const q = (search[cur]||'').trim().toLowerCase();
+  const rows = q ? list.filter(t=>String(t.text||'').toLowerCase().includes(q)) : list;
+  const todo = rows.filter(t=>!t.done).length;
+
+  let html = `<div class="toolbar">
+    <span style="font-size:13px;color:#7b8794">共 ${list.length} 项，未完成 <b style="color:#3aa98f">${todo}</b> 项</span>
+    <div class="spacer"></div>
+    <button class="btn primary" data-add="1">＋ 新增待办</button>
+  </div><div class="card"><div class="todo">`;
+
+  if(!rows.length){
+    html += `<div class="empty"><div class="big">✅</div><div>暂无待办，享受片刻清净～</div></div>`;
+  }else{
+    html += rows.map(t=>{
+      const overdue = !t.done && t.due && t.due < todayStr();
+      return `<div class="todo-item ${t.done?'done':''}">
+        <div class="cb ${t.done?'on':''}" data-toggle="${t.id}">${t.done?'✓':''}</div>
+        <div class="todo-txt">
+          <div class="t">${esc(t.text)}</div>
+          <div class="d ${overdue?'overdue':''}">${t.due?`截止 ${esc(t.due)}${overdue?'（已逾期）':''}`:'未设截止日期'}</div>
+        </div>
+        <span class="pri p-${esc(t.pri||'低')}">${esc(t.pri||'低')}</span>
+        <button class="ico-btn" data-edit="${t.id}">✎</button>
+        <button class="ico-btn del" data-del="${t.id}">🗑</button>
+      </div>`;
+    }).join('');
+  }
+  html += `</div></div>`;
+  view.innerHTML = html;
+
+  view.querySelector('[data-add]').onclick = ()=> openForm('todos', null);
+  view.querySelectorAll('[data-toggle]').forEach(b=> b.onclick = ()=>{
+    const t = state.todos.find(x=>x.id===b.dataset.toggle);
+    t.done = !t.done; save(); renderBody();
+  });
+  view.querySelectorAll('[data-edit]').forEach(b=> b.onclick = ()=> openForm('todos', b.dataset.edit));
+  view.querySelectorAll('[data-del]').forEach(b=> b.onclick = ()=>{
+    if(confirm('确定删除这条待办吗？')){
+      state.todos = state.todos.filter(x=>x.id!==b.dataset.del);
+      save(); render();
+    }
+  });
+}
+
+/* ---------- 表单弹窗 ---------- */
+function openForm(key, rid){
+  const conf = SECTIONS[key];
+  const rec = rid ? (state[key]||[]).find(x=>x.id===rid) : null;
+  editing = {key, id: rid};
+  document.getElementById('dlgTitle').textContent = rec ? '编辑' : '新增';
+  const body = document.getElementById('dlgBody');
+  body.innerHTML = conf.fields.map(f=>{
+    const v = rec ? (rec[f.key] ?? '') : (f.type==='date' ? todayStr() : (f.key==='pri'?'中':''));
+    const req = f.required ? '<span class="req">*</span>' : '';
+    let ctrl;
+    if(f.type === 'select'){
+      ctrl = `<select data-k="${f.key}">${f.options.map(o=>`<option ${String(v)===o?'selected':''}>${esc(o)}</option>`).join('')}</select>`;
+    }else if(f.type === 'textarea'){
+      ctrl = `<textarea data-k="${f.key}" placeholder="${esc(f.ph||'')}">${esc(v)}</textarea>`;
+    }else{
+      ctrl = `<input type="${f.type==='date'?'date':'text'}" data-k="${f.key}" value="${esc(v)}" placeholder="${esc(f.ph||'')}">`;
+    }
+    return `<div class="field"><label>${esc(f.label)} ${req}</label>${ctrl}</div>`;
+  }).join('');
+  document.getElementById('mask').classList.add('show');
+}
+function closeForm(){ document.getElementById('mask').classList.remove('show'); editing = null; }
+
+function submitForm(){
+  if(!editing) return;
+  const {key, id: rid} = editing;
+  const conf = SECTIONS[key];
+  const data = {};
+  document.querySelectorAll('#dlgBody [data-k]').forEach(el=>{
+    data[el.dataset.k] = el.value.trim();
+  });
+  for(const f of conf.fields){
+    if(f.required && !data[f.key]){ alert(`请填写「${f.label}」`); return; }
+  }
+  // 类型转换
+  if(key === 'todos'){
+    data.done = data.done === '已完成';
+  }else if(key === 'archives'){
+    data.updated = data.updated || todayStr();
+  }
+  if(rid){
+    const rec = state[key].find(x=>x.id===rid);
+    Object.assign(rec, data);
+  }else{
+    state[key].push(Object.assign({id:id()}, data));
+  }
+  save(); closeForm(); render();
+}
+
+document.getElementById('dlgSave').onclick = submitForm;
+document.getElementById('dlgCancel').onclick = closeForm;
+document.getElementById('dlgClose').onclick = closeForm;
+document.getElementById('mask').onclick = e => { if(e.target.id === 'mask') closeForm(); };
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') closeForm();
+  if(e.key === 'Enter' && (e.ctrlKey||e.metaKey) && document.getElementById('mask').classList.contains('show')) submitForm();
+});
+
+/* ---------- 数据备份 / 恢复 ---------- */
+document.getElementById('btnExport').onclick = ()=>{
+  const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  const d = new Date();
+  a.href = URL.createObjectURL(blob);
+  a.download = `幼儿园工作台备份_${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
+document.getElementById('btnImport').onclick = ()=> document.getElementById('fileInput').click();
+document.getElementById('fileInput').onchange = e => {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try{
+      const d = JSON.parse(ev.target.result);
+      if(typeof d !== 'object' || Array.isArray(d)) throw new Error('格式不正确');
+      ORDER.forEach(k=>{ if(!Array.isArray(d[k])) d[k] = []; });
+      state = d; save(); filter = {}; search = {}; render();
+      alert('数据已恢复 ✓');
+    }catch(err){
+      alert('导入失败：' + err.message);
+    }
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+};
+
+/* ---------- 启动 ---------- */
+render();
+</script>
+</body>
+</html>
